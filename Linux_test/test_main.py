@@ -3,6 +3,7 @@ import iverilog_sh
 import vivado_sh
 import vivado_tcl
 import yosys_sh
+import etc_checker
 
 def list_files_in_directory(directory):
     files = os.listdir(directory)
@@ -101,6 +102,14 @@ def handle_main(directory_path):
                 f.write(dirname+','+'Iverilog and Vivado simulation is wrong\n')
                 f.close()
                 print('error log written is down')
+            etc_ok, etc_diff = etc_checker.compare_outputs(iverilog_result, Vivado_result)
+            if not etc_ok:
+                f = open(Error_log_Filename, "a")
+                f.write(dirname + ',' + 'ETC mismatch between RTL and netlist simulation\n')
+                if etc_diff:
+                    f.write(etc_diff + '\n')
+                f.close()
+                print('ETC mismatch written is down')
             yosys_sh.yosys_syn(dirname)
             yosys_sh.yosys_handle(dirname)
             yosys_sh.changeName(dirname)
