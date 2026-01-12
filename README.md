@@ -1,6 +1,6 @@
-# LSC-Fuzz
+# SmootHDL
 
-**LSC-Fuzz** is an automated testing tool for FPGA synthesis compilers. It takes a Simulink model, mutates it to create functionally equivalent variants, generates HDL, and compares RTL vs post-synthesis behavior to surface compiler bugs.
+**SmootHDL** is an automated testing tool for FPGA synthesis compilers. It takes a Simulink model, mutates it to create functionally equivalent variants, generates HDL, and compares RTL vs post-synthesis behavior to surface compiler bugs.
 
 ## Requirements
 
