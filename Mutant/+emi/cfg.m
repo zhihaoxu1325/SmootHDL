@@ -98,6 +98,15 @@ classdef cfg
         TPG_MUTATIONS_PER_CHART = 1;
         TPG_SELECTOR_NAME = 'tpg_selector';
 
+        %% BDS (Bayesian Diversity Selection)
+        BDS_ENABLE = false;
+        BDS_NUM_CANDIDATES = 3;
+        BDS_SELECT_COUNT = 1;
+        BDS_USE_SMBO = true;
+        BDS_RF_TREES = 40;
+        BDS_RF_MIN_LEAF = 5;
+        BDS_HDL_SEARCH_DIRS = {};
+
         %% Random experiments
         
         % This section only makes sense when RNG_SHUFFLE is false.
