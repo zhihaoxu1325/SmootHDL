@@ -14,6 +14,7 @@ classdef ReportForModel < handle
         % cell, initialized by client (e.g. BaseModelMutator)
         % Contains structs, not actual emi.ReportForMutant objects
         mutants = [] ; 
+        selected_mutants = [];
         exception_ob = [] ;
         
         % After differential testing
@@ -71,4 +72,3 @@ classdef ReportForModel < handle
     end
     
 end
-
