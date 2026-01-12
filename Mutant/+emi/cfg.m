@@ -79,6 +79,7 @@ classdef cfg
             %@emi.decs.TypeAnnotateEveryBlock                  % Base Mutation
             %@emi.decs.TypeAnnotateByOutDTypeStr          % Base Mutation
             %@emi.decs.DeleteDeadAddSaturation                % Dead Mutation
+            @emi.decs.StateflowTPG                            % Stateflow TPG
             @emi.decs.LiveMutation                                      % Live Mutation
             };
         
@@ -91,6 +92,11 @@ classdef cfg
             @emi.live.ForEach                    % 5
         }; 
         LIVE_MUT_WEIGHTS = [0 0 0 0.5 0]; 
+
+        %% TPG (Stateflow structural mutations)
+        TPG_ENABLE = true;
+        TPG_MUTATIONS_PER_CHART = 1;
+        TPG_SELECTOR_NAME = 'tpg_selector';
 
         %% Random experiments
         
@@ -217,4 +223,3 @@ classdef cfg
     end
     
 end
-
