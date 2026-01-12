@@ -232,8 +232,15 @@ classdef (Abstract) BaseModelMutator < handle
         function ret = create_mutants(obj, return_after_preprocess)
             %% return_after_preprocess is set to true by ModelPreprocessor
             ret = true;
-            
-            for i=1:obj.num_mutants
+
+            num_candidates = obj.num_mutants;
+            if emi.cfg.BDS_ENABLE
+                num_candidates = max(num_candidates, emi.cfg.BDS_NUM_CANDIDATES);
+            end
+
+            candidate_reports = cell(num_candidates, 1);
+
+            for i=1:num_candidates
                 obj.open_model();
                 
                 if ~ return_after_preprocess
@@ -256,7 +263,7 @@ classdef (Abstract) BaseModelMutator < handle
                 
                 obj.end_mutant_callback(a_mutant);
                 
-                obj.result.mutants{i} = a_mutant.r.get_report();
+                candidate_reports{i} = a_mutant.r.get_report();
                 
                 % Saving after every mutant
                 obj.save_my_result();
@@ -269,6 +276,18 @@ classdef (Abstract) BaseModelMutator < handle
                 
                 delete(a_mutant);
                 clear a_mutant;
+            end
+
+            obj.result.mutants = candidate_reports;
+
+            if emi.cfg.BDS_ENABLE && ~return_after_preprocess
+                selector = emi.bds.Selector();
+                [selected_idx, scored_reports] = selector.select(candidate_reports);
+                obj.result.mutants = scored_reports;
+                obj.result.selected_mutants = scored_reports(selected_idx);
+                obj.save_my_result();
+            else
+                obj.result.selected_mutants = obj.result.mutants;
             end
         end
         
@@ -285,8 +304,13 @@ classdef (Abstract) BaseModelMutator < handle
             
             % Append baseline model before all valid mutants
             
+            mutants_for_test = obj.result.valid_mutants();
+            if ~isempty(obj.result.selected_mutants)
+                mutants_for_test = obj.result.selected_mutants;
+            end
+
             T = [{struct('sys', obj.sys, 'loc', obj.model_data.loc_input)},...
-                obj.result.valid_mutants()];
+                mutants_for_test];
             
             % Create Differential tester
             
@@ -406,4 +430,3 @@ classdef (Abstract) BaseModelMutator < handle
     end
     
 end
-
